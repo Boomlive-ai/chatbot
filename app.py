@@ -19,6 +19,24 @@ os.environ['GOOGLE_API_KEY'] = os.getenv("GOOGLE_API_KEY")
 os.environ['TAVILY_API_KEY'] = os.getenv("TAVILY_API_KEY")
 os.environ['PINECONE_API_KEY'] = os.getenv("PINECONE_API_KEY")
 
+
+
+@app.route('/')
+def api_overview():
+    """
+    This route provides a basic overview of available API routes.
+    """
+    routes = {
+        "GET /query": "Query the chatbot with a question (requires 'question' and 'thread_id' parameters).",
+        "POST /store_articles": "Store articles for a custom date range (requires 'from_date' and 'to_date' in the body).",
+        "POST /store_daily_articles": "Store articles for the current day.",
+        "GET /generate_questions": "Fetch latest articles and generate questions from Boomlive."
+    }
+    return jsonify(routes), 200
+
+
+
+
 @app.route('/query', methods=['GET'])
 def query_bot():
     question = request.args.get('question')
@@ -103,5 +121,9 @@ def generate_questions_route():
         return jsonify(results), 200
     except Exception as e:
         return jsonify({"error": f"An error occurred: {str(e)}"}), 500
+    
+
+
+
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, host='0.0.0.0', port=5000)
